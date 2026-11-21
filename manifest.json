@@ -4,6 +4,7 @@
   "Version": "1.0.0",
   "Description": "Checks all mod dependencies at launch, downloads missing mods from downloads.json, and restarts the game so they load.",
   "UniqueID": "narkomaniya.ErrorPatch",
+  "EntryDll": "ErrorPatch.dll",
   "EntryKey": "ErrorPatch.ModEntry",
   "MinimumGameVersion": "1.6.0",
   "MinimumSMAPIVersion": "4.0.0"

@@ -207,7 +207,7 @@ namespace ErrorPatch
             return downloaded;
         }
 
-        private static void LoadUrls(string path, Dictionary<string, string> urls)
+        private void LoadUrls(string path, Dictionary<string, string> urls)
         {
             if (!File.Exists(path))
                 return;
@@ -221,8 +221,7 @@ namespace ErrorPatch
             }
             catch (Exception ex)
             {
-                // Reported by caller only indirectly; keep going with whatever loaded.
-                Console.Error.WriteLine("ErrorPatch: bad downloads.json: " + ex.Message);
+                Monitor.Log("ErrorPatch: bad downloads.json: " + ex.Message, LogLevel.Warn);
             }
         }
 
