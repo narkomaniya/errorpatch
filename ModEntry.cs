@@ -68,7 +68,17 @@ namespace ErrorPatch
                 Monitor.Log("ErrorPatch: installed " + string.Join(", ", downloaded) + ". Restarting Stardew Valley so SMAPI loads them...", LogLevel.Alert);
                 try
                 {
-                    var start = new ProcessStartInfo("cmd.exe", "/c timeout /t 2 >nul & start steam://rungameid/413150")
+                    // The game must be closed before SMAPI scans mods again. A tiny
+                    // detached watcher waits for this process to exit, then starts
+                    // SMAPI immediately so the downloaded mods load right away.
+                    int pid = Process.GetCurrentProcess().Id;
+                    string gameDir = Directory.GetParent(modsDir)?.FullName ?? modsDir;
+                    string smapiExe = Path.Combine(gameDir, "StardewModdingAPI.exe");
+                    string command =
+                        "for($i=0;$i -lt 50 -and (Get-Process -Id " + pid + " -ErrorAction SilentlyContinue);$i++)" +
+                        "{Start-Sleep -Milliseconds 100};" +
+                        "Start-Process -FilePath '" + smapiExe + "' -WorkingDirectory '" + gameDir + "'";
+                    var start = new ProcessStartInfo("powershell.exe", "-NoProfile -WindowStyle Hidden -Command " + command)
                     {
                         UseShellExecute = false,
                         CreateNoWindow = true
